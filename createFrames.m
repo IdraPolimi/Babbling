@@ -1,65 +1,15 @@
-%
-% *************************************************************************
-% * Authors: Laurier Demers, Francois Grondin, Arash Vakili               *
-% *************************************************************************
-% * Inputs:  x               Vector                                       *
-% *          hop             Number of samples between adjacent windows   *
-% *          windowSize      Size of each window                          *
-% * Outputs: vectorFrames    Resulting matrix made of all the frames      *
-% *          numberSlices    Number of frames in the matrix               *
-% *************************************************************************
-% * Description:                                                          *
-% *                                                                       *
-% * This function splits a vector in overlapping frames and stores these  *
-% * frames into a matrix:                                                 *
-% *                                                                       *
-% * |------------------Input vector---------------------|                 *
-% *                                                                       *
-% * |------1------|                                                       *
-% *     |------2------|                                                   *
-% *         |------3------|                                               *
-% *             |------4------|                                           *
-% *                      ...                                              *
-% *                                                                       *
-% * Index            Frame                                                *
-% *   1         |------1------|                                           *
-% *   2         |------2------|                                           *
-% *   3         |------3------|                                           *
-% *   4         |------4------|                                           *
-% *  ...              ...                                                 *
-% *                                                                       *
-% *************************************************************************
-% * DISCLAIMER:                                                           *
-% *                                                                       *
-% * Copyright and other intellectual property laws protect these          *
-% * materials. Reproduction or retransmission of the materials, in whole  *
-% * or in part, in any manner, without the prior consent of the copyright *
-% * holders, is a violation of copyright law.                             *
-% *                                                                       *
-% * The authors are not responsible for any damages whatsoever, including *
-% * any type of loss of information, interruption of business, personal   *
-% * injury and/or any damage or consequential damage without any          *
-% * limitation incurred before, during or after the use of this code.     *
-% *************************************************************************
-function [vectorFrames,numberSlices] = createFrames(x,hop,windowSize)
+function [vectorFrames] = createFrames(x,hop,windowSize)
+% createFrames: splits a vector in overlapping frames 
+%   inputs: x, vector to be splitted
+%           hop, displacement of each windows in number of samples;
+%           windowSize, length of the windows
+%   outputs: vectorFrames matrix containing each frame as rows
 
-% Find the max number of slices that can be obtained
-numberSlices = floor((length(x)-windowSize)/hop);
-
-% Truncate if needed to get only a integer number of hop
-x = x(1:(numberSlices*hop+windowSize));
-
-% Create a matrix with time slices
-vectorFrames = zeros(floor(length(x)/hop),windowSize);
-
-% Fill the matrix
-for index = 1:numberSlices
-   
+numberSlices = floor((length(x)-windowSize)/hop) +1 %added +1!;
+x = x(1:((numberSlices-1)*hop+windowSize));
+vectorFrames = zeros(numberSlices,windowSize);
+for index = 1:numberSlices   
     indexTimeStart = (index-1)*hop + 1;
     indexTimeEnd = (index-1)*hop + windowSize;
-    
     vectorFrames(index,:) = x(indexTimeStart: indexTimeEnd);
-    
 end
-
-return

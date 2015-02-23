@@ -1,8 +1,9 @@
 function dataSet = loadAudioFiles(folder)
-% Load all the audio files contained in a specified folder
+% loadAudioFiles: load all the audio .wav files contained in the specified folder
+%   input: the target directory
+%   output: the dataset as structure, sig and sampling frequency
+
 d=dir([folder '/*.wav']);
-
-
 for ii=1:length(d)
     fname=d(ii).name;
     [sig , freq] = audioread(fname);
