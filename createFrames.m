@@ -5,7 +5,7 @@ function [vectorFrames] = createFrames(x,hop,windowSize)
 %           windowSize, length of the windows
 %   outputs: vectorFrames matrix containing each frame as rows
 
-numberSlices = floor((length(x)-windowSize)/hop) +1 %added +1!;
+numberSlices = floor((length(x)-windowSize)/hop) +1; %added +1!;
 x = x(1:((numberSlices-1)*hop+windowSize));
 vectorFrames = zeros(numberSlices,windowSize);
 for index = 1:numberSlices   

@@ -1,4 +1,4 @@
-function [outputVector] = pitchShift(inputVector, windowSize, hopSize, step)
+function [outputVector, scaledFs] = pitchShift(inputVector, freq,  windowSize, hopSize, step)
 % pitchShift: takes a vector of samples in the time-domain and shifts the pitch 
 % by the number of steps specified. Each step corresponds to half a tone. 
 %   inputs: inputVector, vector (time-domain) to be processed, as column
@@ -44,3 +44,4 @@ outputTimeStretched = fusionFrames(output,hopOut);
 %Resample with linearinterpolation
 outputTime = interp1((0:(length(outputTimeStretched)-1)),outputTimeStretched,(0:2^(step/12):(length(outputTimeStretched)-1)),'linear');
 outputVector = outputTime;
+scaledFs = freq/2^(step/12);
