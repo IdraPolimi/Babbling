@@ -13,7 +13,7 @@ if(nargin<2)
 end    
 
 for ii=1:length(dataSet)
-    [P,Q] = rat(newFs/dataSet(ii).freq);  
+    [P,Q] = rat(newFs/dataSet(ii).freq); 
     % Resample the audio file
     dataSet(ii).sig = resample(dataSet(ii).sig ,P,Q);
     dataSet(ii).freq = newFs;

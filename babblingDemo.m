@@ -1,21 +1,24 @@
 dataSet = loadAudioFiles('Dataset');
 normDataset = normalizeDataSet(dataSet, 44000);
 
-newPitch = 400;
+newPitchFs = 440;
 normVett=[];
-startVett = [];    
-for ii = 1:2%size(dataSet,2)
+startVett = [];
+modPitch = [];
+
+for ii = 1:size(dataSet,2)
     
-    oldPitch = pitchDetector(normDataset(ii).sig, normDataset(ii).freq)
-    step = 4%(newPitch - oldPitch)/40
+    oldPitchFs = pitchDetector(normDataset(ii).sig, normDataset(ii).freq);
+    step = 12*log2(newPitchFs/oldPitchFs);
     %startVett = [startVett; normDataset(ii).sig];
-    [normDataset(ii).sig,normDataset(ii).freq  ]= pitchShift(normDataset(ii).sig, normDataset(ii).freq, 1024, 256, step);
-    %normVett = [normVett normDataset(ii).sig];
-    newFreq = normDataset(ii).freq
-    pitchDetector(normDataset(ii).sig, normDataset(ii).freq)
+    shiftedNormDataset(ii).sig = pitchShift(normDataset(ii).sig, 1024, 256, step);
+    normVett = [normVett shiftedNormDataset(ii).sig];
+    tempPitch = pitchDetector(shiftedNormDataset(ii).sig, normDataset(ii).freq);
+    modPitch = [modPitch tempPitch];
+    difference = tempPitch-oldPitchFs;
 end
 
 
 %sound(startVett,44000);
 %pause
-%sound(normVett,44000);
+%sound(normVett,44000)

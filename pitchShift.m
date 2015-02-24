@@ -1,4 +1,4 @@
-function [outputVector, scaledFs] = pitchShift(inputVector, freq,  windowSize, hopSize, step)
+function outputVector = pitchShift(inputVector, windowSize, hopSize, step)
 % pitchShift: takes a vector of samples in the time-domain and shifts the pitch 
 % by the number of steps specified. Each step corresponds to half a tone. 
 %   inputs: inputVector, vector (time-domain) to be processed, as column
@@ -19,7 +19,7 @@ previousPhase = 0;
 for index=1:size(y,1)
     currentFrame = y(index,:);
     %Window the frame
-    currentFrameWindowed = currentFrame .* wn';%/ sqrt(((windowSize/hopSize)/2));% / (hopSize/windowSize); %
+    currentFrameWindowed = currentFrame .* wn'/ sqrt(((windowSize/hopSize)/2));% / (hopSize/windowSize); %
     %Get the FFT of the fftshif
     currentFrameWindowedFFT = fft(fftshift(currentFrameWindowed));
     %Get the magnitude
@@ -37,11 +37,10 @@ for index=1:size(y,1)
     phaseCumulative = phaseCumulative + hopOut * trueFreq;    
     % Produce output frame
     outputFrame = fftshift(real(ifft(magFrame .* exp(j*phaseCumulative))));
-    output(index,:) = outputFrame .* wn';% / sqrt(((windowSize/hopOut)/2));
+    output(index,:) = outputFrame .* wn' / sqrt(((windowSize/hopOut)/2));
 end
 %Overlap add in a vector
 outputTimeStretched = fusionFrames(output,hopOut);
 %Resample with linearinterpolation
 outputTime = interp1((0:(length(outputTimeStretched)-1)),outputTimeStretched,(0:2^(step/12):(length(outputTimeStretched)-1)),'linear');
 outputVector = outputTime;
-scaledFs = freq/2^(step/12);
