@@ -19,6 +19,24 @@ for ii=1:length(dataSet)
     dataSet(ii).freq = newFs;
     %scales and shifts the sound vectors so they have a max amplitude of one and have a average value of zero
     dataSet(ii).sig = (dataSet(ii).sig - mean(dataSet(ii).sig));
+    
+    
+    
+    
+    %figure
+    %plot(dataSet(ii).sig);
+    %normalize RMS
+    %rmsVec = sqrt(sum(dataSet(ii).sig.^2)/length(dataSet(ii).sig))
+    %maxAmp = max(abs(dataSet(ii).sig))
+    %maxScale = 0.999 / maxAmp;
+    %maxRMS = rmsVec;%maxRMS = maxScale * rmsVec;
+    %dataSet(ii).sig = dataSet(ii).sig*maxRMS;
+    %figure;
+    %plot(dataSet(ii).sig);
+    
+    
+    
+    
     dataSet(ii).sig = dataSet(ii).sig  / max(abs(dataSet(ii).sig));
 end
 

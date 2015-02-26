@@ -8,7 +8,7 @@ normVett=[];
 startVett = [];
 modPitch = [];
 
-for ii = 1:size(dataSet,2)
+for ii = 1:size(dataSet,2)%
     disp(ii)
     oldPitchFs = pitchDetector(normDataset(ii).sig, normDataset(ii).freq)
     step = 12*log2(newPitchFs/oldPitchFs)
