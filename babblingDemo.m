@@ -21,6 +21,10 @@ for ii = 1:size(dataSet,2)%
     disp('::::::::::::::::::::::::::::::::::::::::::::::::::::');
 end
 
+r1 = randi(length(normDataset), 1)
+r2 = randi(length(normDataset), 1)
+
+crossed = crossFade(shiftedNormDataset(r1).sig , shiftedNormDataset(r2).sig);
 
 %sound(startVett,44000);
 %pause
