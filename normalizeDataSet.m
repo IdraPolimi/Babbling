@@ -8,9 +8,12 @@ function dataSet = normalizeDataSet(dataSet, newFs)
 %   output: the normalized dataset as structure, signal and sampling
 %   frequency
 
+RMSs = [];
+rmsVec = [];
+maxScale = [];
 if(nargin<2)
     newFs = 44100;
-end    
+end  
 
 for ii=1:length(dataSet)
     [P,Q] = rat(newFs/dataSet(ii).freq); 
@@ -19,25 +22,16 @@ for ii=1:length(dataSet)
     dataSet(ii).freq = newFs;
     %scales and shifts the sound vectors so they have a max amplitude of one and have a average value of zero
     dataSet(ii).sig = (dataSet(ii).sig - mean(dataSet(ii).sig));
-    
-    
-    
-    
-    %figure
-    %plot(dataSet(ii).sig);
-    %normalize RMS
-    %rmsVec = sqrt(sum(dataSet(ii).sig.^2)/length(dataSet(ii).sig))
-    %maxAmp = max(abs(dataSet(ii).sig))
-    %maxScale = 0.999 / maxAmp;
-    %maxRMS = rmsVec;%maxRMS = maxScale * rmsVec;
-    %dataSet(ii).sig = dataSet(ii).sig*maxRMS;
-    %figure;
-    %plot(dataSet(ii).sig);
-    
-    
-    
-    
-    dataSet(ii).sig = dataSet(ii).sig  / max(abs(dataSet(ii).sig));
+    rmsVec = [rmsVec sqrt(sum(dataSet(ii).sig.^2)/length(dataSet(ii).sig))];
+    maxScale = [maxScale 0.999 / max(abs(dataSet(ii).sig))];
 end
+
+RMSs = maxScale .* rmsVec;
+targetRMS = min(RMSs);
+for ii=1:length(dataSet)
+    dataSet(ii).sig = dataSet(ii).sig*targetRMS/rmsVec(ii);
+end
+
+
 
 
