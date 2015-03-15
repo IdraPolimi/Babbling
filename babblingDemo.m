@@ -21,10 +21,26 @@ for ii = 1:size(dataSet,2)%
     disp('::::::::::::::::::::::::::::::::::::::::::::::::::::');
 end
 
-r1 = randi(length(normDataset), 1)
-r2 = randi(length(normDataset), 1)
+%datasetClusters = featuresClustering(shiftedNormDataset);
 
-crossed = crossFade(shiftedNormDataset(r1).sig , shiftedNormDataset(r2).sig);
+crossedDataset = [];
+rr = 1;
+for jj = 1:size(dataSet,2)
+
+ for tt = 1:size(dataSet,2)
+     
+     crossedDataset(rr).sig = crossFade(shiftedNormDataset(jj).sig , shiftedNormDataset(tt).sig);
+     rr = rr+1;
+     
+end   
+end
+
+[Features ,composedDatasetClusters, Centroids, sums, distances, Ps] = featuresClustering(crossedDataset);
+
+%r1 = randi(length(normDataset), 1)
+%r2 = randi(length(normDataset), 1)
+
+%crossed = crossFade(shiftedNormDataset(r1).sig , shiftedNormDataset(r2).sig);
 
 %sound(startVett,44000);
 %pause
