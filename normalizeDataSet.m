@@ -20,6 +20,8 @@ for ii=1:length(dataSet)
     % Resample the audio file
     dataSet(ii).sig = resample(dataSet(ii).sig ,P,Q);
     dataSet(ii).freq = newFs;
+    
+                                                        
     %scales and shifts the sound vectors so they have a max amplitude of one and have a average value of zero
     dataSet(ii).sig = (dataSet(ii).sig - mean(dataSet(ii).sig));
     rmsVec = [rmsVec sqrt(sum(dataSet(ii).sig.^2)/length(dataSet(ii).sig))];
@@ -31,7 +33,6 @@ targetRMS = min(RMSs);
 for ii=1:length(dataSet)
     dataSet(ii).sig = dataSet(ii).sig*targetRMS/rmsVec(ii);
 end
-
 
 
 

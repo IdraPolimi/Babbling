@@ -19,14 +19,9 @@ ywave1 = [y1 , zeros(1,length(xramp1)-length(y1))];
 ywave2 = [zeros(1,length(xramp2)-length(y2)), y2];
 
 % do xfade
-
 % add two waves together over the period modulated by xfade ramps (recall
 % .* to multiply matrices element by element NOT MATRIX mutliplication
 
-size(xramp1)
-size(xramp2)
-size(ywave1)
-size(ywave2)
 crossFaded = xramp1.*ywave1 + xramp2.*ywave2;
 
 

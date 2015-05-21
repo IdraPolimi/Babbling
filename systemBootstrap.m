@@ -1,47 +1,43 @@
 clear
 clc
+
+%load dataset
 dataSet = loadAudioFiles('Dataset');
+
+%normalize dataset channel, frequency and intensity
 normDataset = normalizeDataSet(dataSet, 44000);
 
+%normalize the pitch
 newPitchFs = 440;
 normVett=[];
 startVett = [];
 modPitch = [];
 
-for ii = 1:size(dataSet,2)%
-    disp(ii)
+for ii = 1:size(dataSet,2)
     oldPitchFs = pitchDetector(normDataset(ii).sig, normDataset(ii).freq);
     step = 12*log2(newPitchFs/oldPitchFs);
-    %startVett = [startVett; normDataset(ii).sig];
     shiftedNormDataset(ii).sig = pitchShift(normDataset(ii).sig, 1024, 256, step);
     normVett = [normVett shiftedNormDataset(ii).sig];
     tempPitch = pitchDetector(shiftedNormDataset(ii).sig, normDataset(ii).freq);
     modPitch = [modPitch tempPitch];
     difference = tempPitch-oldPitchFs;
-    disp('::::::::::::::::::::::::::::::::::::::::::::::::::::');
 end
 
-%datasetClusters = featuresClustering(shiftedNormDataset);
-
+%creates the crossed dataset composing the lenguage primitives
 crossedDataset = [];
 rr = 1;
 for jj = 1:size(dataSet,2)
-
- for tt = 1:size(dataSet,2)
-     
+ for tt = 1:size(dataSet,2)  
      crossedDataset(rr).sig = crossFade(shiftedNormDataset(jj).sig , shiftedNormDataset(tt).sig);
-     rr = rr+1;
-     
+     rr = rr+1;   
 end   
 end
 
-[Features ,composedDatasetClusters, Centroids, sums, distances, Ps] = featuresClustering(crossedDataset);
+%extract the features from the crossed dataset and creates the states
+%making the clustering
+statesNumber = 20;
+[Features, normFeatures,composedDatasetClusters, Centroids, sums, distances, Ps] = featuresClustering(crossedDataset, statesNumber);
 
-%r1 = randi(length(normDataset), 1)
-%r2 = randi(length(normDataset), 1)
-
-%crossed = crossFade(shiftedNormDataset(r1).sig , shiftedNormDataset(r2).sig);
-
-%sound(startVett,44000);
-%pause
-%sound(normVett,44000)
+%inizialize the state table and the index vector
+table = zeros(statesNumber, size(crossedDataset,2));
+indexVector = [];
